@@ -1,39 +1,24 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/**
- * Copyright (c) Mik BRY
- * mik@mikbry.com
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Popover from '@mui/material/Popover';
-import { StylesProvider, createGenerateClassName, makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import ColorButton from './ColorButton';
 import ColorBox from './ColorBox';
 import * as ColorTool from '../helpers/colorTool';
-import uncontrolled from '../helpers/uncontrolled';
 import * as CommonTypes from '../helpers/commonTypes';
 import useTranslate from '../helpers/useTranslate';
+import uncontrolled from '../helpers/uncontrolled';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: 'max-content',
-  },
-  colorpickerButton: {
-    margin: 6,
-  },
+const Root = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  width: 'max-content',
 });
 
-const generateClassName = createGenerateClassName({
-  seed: 'ColorPicker',
+const StyledColorButton = styled(ColorButton)({
+  margin: 6,
 });
 
 const getColorText = (color, disablePlainColor) => {
@@ -65,7 +50,6 @@ const ColorPicker = ({
   hideTextfield,
   disablePlainColor,
 }) => {
-  const classes = useStyles();
   const refPicker = useRef(null);
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslate();
@@ -112,6 +96,7 @@ const ColorPicker = ({
       onChange={handleColorChange}
     />
   );
+
   if (doPopup) {
     box = doPopup(box);
   } else {
@@ -147,18 +132,16 @@ const ColorPicker = ({
   }
 
   return (
-    <StylesProvider generateClassName={generateClassName}>
-      <div ref={refPicker} className={classes.root}>
-        <ColorButton
-          data-testid="colorpicker-button"
-          className={`muicc-colorpicker-button ${classes.colorpickerButton}`}
-          color={color}
-          onClick={handleClick}
-        />
-        {textField}
-        {box}
-      </div>
-    </StylesProvider>
+    <Root ref={refPicker}>
+      <StyledColorButton
+        data-testid="colorpicker-button"
+        className="muicc-colorpicker-button"
+        color={color}
+        onClick={handleClick}
+      />
+      {textField}
+      {box}
+    </Root>
   );
 };
 
@@ -172,9 +155,6 @@ ColorPicker.propTypes = {
   onOpen: PropTypes.func,
   openAtStart: PropTypes.bool,
   doPopup: PropTypes.func,
-  /**
-    Don't use alpha
-   */
   disableAlpha: PropTypes.bool,
   hslGradient: PropTypes.bool,
   hideTextfield: PropTypes.bool,
